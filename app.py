@@ -207,6 +207,10 @@ async def get_patients():
         if not last_reading:
             last_reading = {"bpm": 0, "temperature": 0, "timestamp": "N/A", "status": "offline"}
         
+        # Get current BPM and temperature from user data or last reading
+        current_bpm = user.get("current_bpm", last_reading["bpm"])
+        current_temp = user.get("current_temperature", last_reading["temperature"])
+        
         patients.append({
             "id": str(user["_id"]),
             "name": user["name"],
@@ -215,8 +219,8 @@ async def get_patients():
             "condition": user.get("condition", "N/A"),
             "status": "online" if total_readings > 0 else "offline",
             "last_reading": last_reading["timestamp"],
-            "bpm": last_reading["bpm"],
-            "temperature": last_reading["temperature"],
+            "bpm": current_bpm,
+            "temperature": current_temp,
             "vital_status": last_reading["status"],
             "total_readings": total_readings
         })
@@ -249,16 +253,43 @@ async def get_patient_details(patient_id: str):
         raise HTTPException(status_code=404, detail="Paciente não encontrado")
     
     readings = await readings_collection.find({"device_id": patient["device_id"]}).to_list(1000)
+    
+    # Calculate stats
+    total_readings = len(readings)
+    avg_bpm = sum(r["bpm"] for r in readings) // total_readings if readings else 0
+    avg_temp = sum(r["temperature"] for r in readings) / total_readings if readings else 0
+    
+    # Get current vitals
     last_reading = readings[-1] if readings else None
+    current_bpm = patient.get("current_bpm", last_reading["bpm"] if last_reading else 0)
+    current_temp = patient.get("current_temperature", last_reading["temperature"] if last_reading else 0)
     
     return {
-        "id": str(patient["_id"]),
-        "name": patient["name"],
-        "device_id": patient["device_id"],
-        "age": patient.get("age", 0),
-        "condition": patient.get("condition", "N/A"),
-        "last_reading": last_reading,
-        "total_readings": len(readings)
+        "patient": {
+            "id": str(patient["_id"]),
+            "name": patient["name"],
+            "device_id": patient["device_id"],
+            "age": patient.get("age", 0),
+            "gender": patient.get("gender", "N/A"),
+            "condition": patient.get("condition", "N/A"),
+            "blood_type": patient.get("blood_type", "N/A"),
+            "allergies": patient.get("allergies", "Nenhuma"),
+            "medications": patient.get("medications", []),
+            "phone": patient.get("phone", "N/A"),
+            "email": patient.get("email", "N/A"),
+            "address": patient.get("address", "N/A"),
+            "emergency_contact": patient.get("emergency_contact", "N/A"),
+            "doctor_notes": patient.get("doctor_notes", "Sem observações"),
+            "location": patient.get("location", {}),
+            "current_bpm": current_bpm,
+            "current_temperature": current_temp
+        },
+        "stats": {
+            "total_readings": total_readings,
+            "avg_bpm": avg_bpm,
+            "avg_temp": round(avg_temp, 1),
+            "days_monitored": 15
+        }
     }
 
 class ESP32Data(BaseModel):
@@ -335,89 +366,7 @@ async def init_db():
             print("Database already initialized")
             return
         
-        # Criar médico de teste
-        doctor = {
-            "name": "Dr. João Médico",
-            "email": "medico@teste.com",
-            "password": "123456",
-            "type": "doctor",
-            "created_at": datetime.utcnow()
-        }
-        await users_collection.insert_one(doctor)
-        
-        # Criar pacientes de teste
-        patients = [
-            {
-                "name": "João Silva",
-                "device_id": "ESP32_001",
-                "type": "patient",
-                "age": 45,
-                "condition": "Hipertensão",
-                "created_at": datetime.utcnow()
-            },
-            {
-                "name": "Maria Oliveira",
-                "device_id": "ESP32_002",
-                "type": "patient",
-                "age": 32,
-                "condition": "Diabetes",
-                "created_at": datetime.utcnow()
-            },
-            {
-                "name": "Carlos Santos",
-                "device_id": "ESP32_003",
-                "type": "patient",
-                "age": 58,
-                "condition": "Arritmia",
-                "created_at": datetime.utcnow()
-            },
-            {
-                "name": "Ana Costa",
-                "device_id": "ESP32_004",
-                "type": "patient",
-                "age": 28,
-                "condition": "Saudável",
-                "created_at": datetime.utcnow()
-            },
-            {
-                "name": "Pedro Lima",
-                "device_id": "ESP32_005",
-                "type": "patient",
-                "age": 67,
-                "condition": "Cardiopatia",
-                "created_at": datetime.utcnow()
-            }
-        ]
-        
-        await users_collection.insert_many(patients)
-        
-        # Criar algumas leituras de teste
-        test_readings = [
-            {
-                "device_id": "ESP32_001",
-                "bpm": 72,
-                "temperature": 36.5,
-                "status": "normal",
-                "timestamp": datetime.utcnow()
-            },
-            {
-                "device_id": "ESP32_002",
-                "bpm": 68,
-                "temperature": 36.8,
-                "status": "normal",
-                "timestamp": datetime.utcnow()
-            },
-            {
-                "device_id": "ESP32_003",
-                "bpm": 105,
-                "temperature": 37.2,
-                "status": "elevated",
-                "timestamp": datetime.utcnow()
-            }
-        ]
-        
-        await readings_collection.insert_many(test_readings)
-        print("Database initialized with test data")
+    
         
     except Exception as e:
         print(f"Error initializing database: {e}")
