@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioConnect - Monitoramento Biomédico Inteligente</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>BioConnect</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Início</a></li>
+                <li><a href="#features">Recursos</a></li>
+                <li><a href="#about">Sobre</a></li>
+                <li><a href="#contact">Contato</a></li>
+                <li><button class="login-btn" onclick="openModal()">Entrar</button></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Monitoramento <span class="gradient-text">Biomédico</span> 
+                    em Tempo Real
+                </h1>
+                <p class="hero-description">
+                    Conecte dispositivos ESP32 para monitoramento contínuo de sinais vitais. 
+                    Tecnologia avançada para cuidados médicos inteligentes.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn-primary" onclick="openModal()">
+                        <i class="fas fa-rocket"></i>
+                        Começar Agora
+                    </button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-card">
+                    <div class="card-header">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>Monitor Cardíaco</span>
+                    </div>
+                    <div class="vital-display">
+                        <div class="vital-item">
+                            <span class="vital-value">72</span>
+                            <span class="vital-unit">BPM</span>
+                        </div>
+                        <div class="pulse-line"></div>
+                    </div>
+                </div>
+                <div class="floating-card temp-card">
+                    <div class="card-header">
+                        <i class="fas fa-thermometer-half"></i>
+                        <span>Temperatura</span>
+                    </div>
+                    <div class="temp-display">
+                        <span class="temp-value">36.5°C</span>
+                        <div class="temp-bar">
+                            <div class="temp-fill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Recursos Avançados</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <h3>Conectividade IoT</h3>
+                    <p>Integração perfeita com dispositivos ESP32 para coleta de dados em tempo real</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Analytics Avançado</h3>
+                    <p>Visualização inteligente de dados com gráficos interativos e relatórios detalhados</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3>Alertas Inteligentes</h3>
+                    <p>Sistema de notificações automáticas para anomalias nos sinais vitais</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Segurança Total</h3>
+                    <p>Criptografia de ponta a ponta para proteção completa dos dados médicos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            
+            <div class="auth-container">
+                <div class="auth-tabs">
+                    <button class="tab-btn active" onclick="showLogin()">Login</button>
+                    <button class="tab-btn" onclick="showRegister()">Registrar</button>
+                </div>
+
+                <!-- Login Form -->
+                <div id="loginForm" class="auth-form active">
+                    <h2>Bem-vindo de volta</h2>
+                    <p>Entre na sua conta para continuar</p>
+                    
+                    <div class="user-type-toggle">
+                        <input type="radio" id="patientLogin" name="loginType" value="patient" checked>
+                        <label for="patientLogin">
+                            <i class="fas fa-user"></i>
+                            Paciente
+                        </label>
+                        
+                        <input type="radio" id="doctorLogin" name="loginType" value="doctor">
+                        <label for="doctorLogin">
+                            <i class="fas fa-user-md"></i>
+                            Médico
+                        </label>
+                    </div>
+
+                    <form id="loginFormSubmit">
+                        <div class="input-group" id="deviceIdGroup">
+                            <i class="fas fa-microchip"></i>
+                            <input type="text" id="deviceId" placeholder="ID do Dispositivo ESP32" required>
+                        </div>
+                        
+                        <div class="input-group" id="emailGroup" style="display: none;">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="email" placeholder="Email">
+                        </div>
+                        
+                        <div class="input-group" id="passwordGroup" style="display: none;">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" placeholder="Senha">
+                        </div>
+                        
+                        <button type="submit" class="auth-btn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Entrar
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Register Form -->
+                <div id="registerForm" class="auth-form">
+                    <h2>Criar conta</h2>
+                    <p>Junte-se à revolução do monitoramento biomédico</p>
+                    
+                    <div class="user-type-toggle">
+                        <input type="radio" id="patientRegister" name="registerType" value="patient" checked>
+                        <label for="patientRegister">
+                            <i class="fas fa-user"></i>
+                            Paciente
+                        </label>
+                        
+                        <input type="radio" id="doctorRegister" name="registerType" value="doctor">
+                        <label for="doctorRegister">
+                            <i class="fas fa-user-md"></i>
+                            Médico
+                        </label>
+                    </div>
+
+                    <form id="registerFormSubmit">
+                        <div id="patientFields">
+                            <div class="input-group">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="patientName" placeholder="Nome completo" required>
+                            </div>
+                            <div class="input-group">
+                                <i class="fas fa-microchip"></i>
+                                <input type="text" id="patientDeviceId" placeholder="ID do Dispositivo ESP32" required>
+                            </div>
+                        </div>
+                        
+                        <div id="doctorFields" style="display: none;">
+                            <div class="input-group">
+                                <i class="fas fa-user-md"></i>
+                                <input type="text" id="doctorName" placeholder="Nome completo" required>
+                            </div>
+                            <div class="input-group">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="doctorEmail" placeholder="Email profissional" required>
+                            </div>
+                            <div class="input-group">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="doctorPassword" placeholder="Senha segura" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="auth-btn">
+                            <i class="fas fa-user-plus"></i>
+                            Criar Conta
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functions
+        function openModal() {
+            document.getElementById('loginModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+        
+        function showLogin() {
+            document.getElementById('loginForm').classList.add('active');
+            document.getElementById('registerForm').classList.remove('active');
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.querySelectorAll('.tab-btn')[1].classList.remove('active');
+        }
+        
+        function showRegister() {
+            document.getElementById('registerForm').classList.add('active');
+            document.getElementById('loginForm').classList.remove('active');
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.querySelectorAll('.tab-btn')[0].classList.remove('active');
+        }
+        
+        // Toggle login fields based on user type
+        document.addEventListener('DOMContentLoaded', function() {
+            const patientLogin = document.getElementById('patientLogin');
+            const doctorLogin = document.getElementById('doctorLogin');
+            const patientRegister = document.getElementById('patientRegister');
+            const doctorRegister = document.getElementById('doctorRegister');
+            
+            patientLogin.addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('deviceIdGroup').style.display = 'block';
+                    document.getElementById('emailGroup').style.display = 'none';
+                    document.getElementById('passwordGroup').style.display = 'none';
+                }
+            });
+            
+            doctorLogin.addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('deviceIdGroup').style.display = 'none';
+                    document.getElementById('emailGroup').style.display = 'block';
+                    document.getElementById('passwordGroup').style.display = 'block';
+                }
+            });
+            
+            patientRegister.addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('patientFields').style.display = 'block';
+                    document.getElementById('doctorFields').style.display = 'none';
+                }
+            });
+            
+            doctorRegister.addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('patientFields').style.display = 'none';
+                    document.getElementById('doctorFields').style.display = 'block';
+                }
+            });
+            
+            // Login form submit
+            document.getElementById('loginFormSubmit').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const isPatient = document.getElementById('patientLogin').checked;
+                const loginData = {
+                    user_type: isPatient ? 'patient' : 'doctor',
+                    email: isPatient ? document.getElementById('deviceId').value : document.getElementById('email').value,
+                    password: isPatient ? '' : document.getElementById('password').value
+                };
+                
+                try {
+                    const response = await fetch('/api/v1/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(loginData)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        localStorage.setItem('user', JSON.stringify(result.user));
+                        alert('Login realizado com sucesso!');
+                        closeModal();
+                        window.location.href = '/dashboard.html';
+                    } else {
+                        alert(result.detail || 'Erro no login');
+                    }
+                } catch (error) {
+                    alert('Erro de conexão');
+                }
+            });
+            
+            // Register form submit
+            document.getElementById('registerFormSubmit').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const isPatient = document.getElementById('patientRegister').checked;
+                const registerData = {
+                    user_type: isPatient ? 'patient' : 'doctor',
+                    name: isPatient ? document.getElementById('patientName').value : document.getElementById('doctorName').value,
+                    email: isPatient ? document.getElementById('patientDeviceId').value : document.getElementById('doctorEmail').value,
+                    password: isPatient ? '' : document.getElementById('doctorPassword').value
+                };
+                
+                try {
+                    const response = await fetch('/api/v1/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(registerData)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        alert('Cadastro realizado com sucesso!');
+                        showLogin();
+                    } else {
+                        alert(result.detail || 'Erro no cadastro');
+                    }
+                } catch (error) {
+                    alert('Erro de conexão');
+                }
+            });
+        });
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('loginModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+    
+    <style>
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+            z-index: 1001;
+        }
+        
+        .close:hover {
+            color: #000;
+        }
+        
+        .auth-container {
+            padding: 40px;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .auth-form h2 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .auth-form p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .user-type-toggle {
+            display: flex;
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 5px;
+        }
+        
+        .user-type-toggle input[type="radio"] {
+            display: none;
+        }
+        
+        .user-type-toggle label {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .user-type-toggle input[type="radio"]:checked + label {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+            }
+            
+            .auth-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</body>
+</html>
