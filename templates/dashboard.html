@@ -571,12 +571,7 @@
                                 <i class="fas fa-eye"></i>
                                 Detalhes
                             </button>
-                            ${patient.vital_status === 'critical' ? `
-                            <button class="btn-emergency" onclick="showPatientLocation('${patient.id}')">
-                                <i class="fas fa-map-marker-alt"></i>
-                                Emergência
-                            </button>` : ''}
-                        </div>
+
                     `;
                     patientsGrid.appendChild(patientCard);
                 });

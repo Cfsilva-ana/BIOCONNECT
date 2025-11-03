@@ -207,10 +207,6 @@ async def get_patients():
         if not last_reading:
             last_reading = {"bpm": 0, "temperature": 0, "timestamp": "N/A", "status": "offline"}
         
-        # Get current BPM and temperature from user data or last reading
-        current_bpm = user.get("current_bpm", last_reading["bpm"])
-        current_temp = user.get("current_temperature", last_reading["temperature"])
-        
         patients.append({
             "id": str(user["_id"]),
             "name": user["name"],
@@ -219,8 +215,8 @@ async def get_patients():
             "condition": user.get("condition", "N/A"),
             "status": "online" if total_readings > 0 else "offline",
             "last_reading": last_reading["timestamp"],
-            "bpm": current_bpm,
-            "temperature": current_temp,
+            "bpm": last_reading["bpm"],
+            "temperature": last_reading["temperature"],
             "vital_status": last_reading["status"],
             "total_readings": total_readings
         })
@@ -259,11 +255,6 @@ async def get_patient_details(patient_id: str):
     avg_bpm = sum(r["bpm"] for r in readings) // total_readings if readings else 0
     avg_temp = sum(r["temperature"] for r in readings) / total_readings if readings else 0
     
-    # Get current vitals
-    last_reading = readings[-1] if readings else None
-    current_bpm = patient.get("current_bpm", last_reading["bpm"] if last_reading else 0)
-    current_temp = patient.get("current_temperature", last_reading["temperature"] if last_reading else 0)
-    
     return {
         "patient": {
             "id": str(patient["_id"]),
@@ -280,9 +271,7 @@ async def get_patient_details(patient_id: str):
             "address": patient.get("address", "N/A"),
             "emergency_contact": patient.get("emergency_contact", "N/A"),
             "doctor_notes": patient.get("doctor_notes", "Sem observações"),
-            "location": patient.get("location", {}),
-            "current_bpm": current_bpm,
-            "current_temperature": current_temp
+            "location": patient.get("location", {})
         },
         "stats": {
             "total_readings": total_readings,
@@ -366,7 +355,8 @@ async def init_db():
             print("Database already initialized")
             return
         
-    
+        # Criar médico de teste
+
         
     except Exception as e:
         print(f"Error initializing database: {e}")
